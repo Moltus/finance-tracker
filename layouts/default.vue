@@ -24,7 +24,7 @@ useHead({
 })
 </script>
 
-<style>
+<style >
 /* Set the font family for the entire site */
 body {
   font-family: 'Inter';
