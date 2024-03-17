@@ -34,6 +34,8 @@ const props = defineProps({
   transaction: Object,
 });
 
+const emit = defineEmits(["deleted"]);
+
 const isIncome = computed(() => props.transaction.type === "Income");
 const icon = computed(() =>
   isIncome.value ? "i-heroicons-arrow-up-right" : "i-heroicons-arrow-down-left",
@@ -48,7 +50,7 @@ const { currency } = useCurrency(props.transaction.amount);
 const isLoading = ref(false);
 const toast = useToast();
 
-// Backend querying
+// backend querying
 const supabase = useSupabaseClient();
 
 const deleteTransaction = async () => {
@@ -61,6 +63,7 @@ const deleteTransaction = async () => {
       icon: "i-heroicons-check-circle",
       color: "green",
     });
+    emit("deleted", props.transaction.id);
   } catch (error) {
     toast.add({
       title: "Delete request rejected",
