@@ -52,12 +52,7 @@
       </p>
     </div>
     <div>
-      <UModal v-model="isOpen">
-        <UCard>
-          <template #header> Add transaction </template>
-          <p>Hello</p>
-        </UCard>
-      </UModal>
+      <TransactionModal v-model="isOpen" />
       <UButton
         icon="i-heroicons-plus-circle"
         color="white"
@@ -90,10 +85,9 @@
 
 <script setup>
 import { transactionViewOptions } from "~/constants";
+
 const selectedView = ref(transactionViewOptions[1]);
-
 const isLoading = ref(false);
-
 const transactions = ref([]);
 
 const income = computed(() =>
