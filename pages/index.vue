@@ -52,9 +52,19 @@
       </p>
     </div>
     <div>
-      <UButton icon="i-heroicons-plus-circle" color="white" variant="solid"
-        >Add</UButton
-      >
+      <UModal v-model="isOpen">
+        <UCard>
+          <template #header> Add transaction </template>
+          <p>Hello</p>
+        </UCard>
+      </UModal>
+      <UButton
+        icon="i-heroicons-plus-circle"
+        color="white"
+        variant="solid"
+        label="Add"
+        @click="isOpen = true"
+      />
     </div>
   </section>
 
@@ -136,4 +146,7 @@ const transactionsGroupedByDate = computed(() => {
   }
   return grouped;
 });
+
+// Modal
+const isOpen = ref(false);
 </script>
