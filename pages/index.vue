@@ -12,14 +12,14 @@
     <Trend
       color="green"
       title="Income"
-      :amount="4000"
+      :amount="incomeTotal"
       :last-amount="4500"
       :loading="isLoading"
     />
     <Trend
       color="red"
       title="Expense"
-      :amount="4000"
+      :amount="expenseTotal"
       :last-amount="3500"
       :loading="isLoading"
     />
@@ -37,6 +37,25 @@
       :last-amount="3000"
       :loading="isLoading"
     />
+  </section>
+
+  <section class="flex justify-between mb-10">
+    <div>
+      <h2 class="text-2xl font-extrabold">Transactions</h2>
+      <p class="text-gray-500 dark:text-gray-400">
+        You have
+        {{ income.length }}
+        {{ income.length > 1 ? "incomes" : "income" }} and
+        {{ expense.length }}
+        {{ expense.length > 1 ? "expenses" : "expense" }}
+        this period
+      </p>
+    </div>
+    <div>
+      <UButton icon="i-heroicons-plus-circle" color="white" variant="solid"
+        >Add</UButton
+      >
+    </div>
   </section>
 
   <section v-if="!isLoading">
@@ -66,6 +85,22 @@ const selectedView = ref(transactionViewOptions[1]);
 const isLoading = ref(false);
 
 const transactions = ref([]);
+
+const income = computed(() =>
+  transactions.value.filter((t) => t.type === "Income"),
+);
+
+const expense = computed(() =>
+  transactions.value.filter((t) => t.type === "Expense"),
+);
+
+const incomeTotal = computed(() =>
+  income.value.reduce((acc, curr) => acc + curr.amount, 0),
+);
+
+const expenseTotal = computed(() =>
+  expense.value.reduce((acc, curr) => acc + curr.amount, 0),
+);
 
 // backend querying
 const supabase = useSupabaseClient();
