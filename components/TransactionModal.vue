@@ -3,31 +3,46 @@
     <UCard>
       <template #header> Add transaction </template>
 
-      <div class="flex flex-col gap-y-4">
+      <UForm :state="state" class="flex flex-col gap-y-4">
         <UFormGroup label="Transaction type" :required="true" name="type">
-          <USelect placeholder="Pick one..." :options="types" v-model="type" />
+          <USelect
+            placeholder="Pick one..."
+            :options="types"
+            v-model="state.type"
+          />
         </UFormGroup>
 
         <UFormGroup label="Amount" :required="true" name="amount">
-          <UInput type="number" placeholder="Enter amount..." />
+          <UInput
+            type="number"
+            placeholder="Enter amount..."
+            v-model.number="state.amount"
+          />
         </UFormGroup>
 
         <UFormGroup label="Transaction date" :required="true" name="created_at">
-          <UInput type="date" icon="i-heroicons-calendar-days-20-solid" />
+          <UInput
+            type="date"
+            icon="i-heroicons-calendar-days-20-solid"
+            v-model="state.created_at"
+          />
         </UFormGroup>
 
         <UFormGroup label="Description" hint="Optional" name="description">
-          <UInput placeholder="Enter description..." />
+          <UInput
+            placeholder="Enter description..."
+            v-model="state.description"
+          />
         </UFormGroup>
 
         <UFormGroup label="Category" name="category">
           <USelect
             placeholder="Pick one..."
             :options="categories"
-            v-model="category"
+            v-model="state.category"
           />
         </UFormGroup>
-      </div>
+      </UForm>
 
       <div class="mt-4">
         <UButton
@@ -46,6 +61,11 @@
 import { categories, types } from "~/constants";
 const model = defineModel();
 
-const category = ref(null);
-const type = ref(null);
+const state = ref({
+  type: undefined,
+  amount: 0,
+  created_at: undefined,
+  description: undefined,
+  category: undefined,
+});
 </script>
