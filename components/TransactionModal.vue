@@ -3,7 +3,7 @@
     <UCard>
       <template #header> Add transaction </template>
 
-      <UForm :state="state" class="flex flex-col gap-y-4">
+      <UForm :state="state" :schema="schema" class="flex flex-col gap-y-4">
         <UFormGroup label="Transaction type" :required="true" name="type">
           <USelect
             placeholder="Pick one..."
@@ -35,7 +35,11 @@
           />
         </UFormGroup>
 
-        <UFormGroup label="Category" name="category">
+        <UFormGroup
+          label="Category"
+          name="category"
+          v-if="state.type === 'Expense'"
+        >
           <USelect
             placeholder="Pick one..."
             :options="categories"
@@ -59,6 +63,8 @@
 
 <script setup>
 import { categories, types } from "~/constants";
+import { z } from "zod";
+
 const model = defineModel();
 
 const state = ref({
@@ -67,5 +73,11 @@ const state = ref({
   created_at: undefined,
   description: undefined,
   category: undefined,
+});
+
+const schema = z.object({
+  created_at: z.string(),
+  description: z.string().optional(),
+  amount: z.number().positive("Amount needs to be more than 0"),
 });
 </script>
