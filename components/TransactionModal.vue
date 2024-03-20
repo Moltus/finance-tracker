@@ -3,7 +3,13 @@
     <UCard>
       <template #header> Add transaction </template>
 
-      <UForm :state="state" :schema="schema" class="flex flex-col gap-y-4">
+      <UForm
+        :state="state"
+        :schema="schema"
+        class="flex flex-col gap-y-4"
+        :ref="form"
+        @submit.prevent="onSubmit"
+      >
         <UFormGroup label="Transaction type" :required="true" name="type">
           <USelect
             placeholder="Pick one..."
@@ -46,17 +52,8 @@
             v-model="state.category"
           />
         </UFormGroup>
+        <UButton type="submit" color="blue" variant="solid">Save</UButton>
       </UForm>
-
-      <div class="mt-4">
-        <UButton
-          type="submit"
-          color="blue"
-          variant="solid"
-          label="Save"
-          @click="model = false"
-        />
-      </div>
     </UCard>
   </UModal>
 </template>
@@ -67,17 +64,60 @@ import { z } from "zod";
 
 const model = defineModel();
 
-const state = ref({
+const form = ref();
+
+const onSubmit = async (event) => {
+  console.log("salut");
+  console.log(event);
+};
+
+const initialState = {
   type: undefined,
   amount: 0,
   created_at: undefined,
   description: undefined,
   category: undefined,
-});
+};
 
-const schema = z.object({
+const state = ref({ ...initialState });
+
+const resetForm = () => {
+  Object.assign(state.value, initialState);
+};
+
+const defaultSchema = z.object({
   created_at: z.string(),
   description: z.string().optional(),
   amount: z.number().positive("Amount needs to be more than 0"),
+});
+
+const incomeSchema = z.object({
+  type: z.literal("Income"),
+});
+const expenseSchema = z.object({
+  type: z.literal("Expense"),
+  category: z.enum(categories),
+});
+const investmentSchema = z.object({
+  type: z.literal("Investment"),
+});
+const savingSchema = z.object({
+  type: z.literal("Saving"),
+});
+
+const schema = z.intersection(
+  z.discriminatedUnion("type", [
+    incomeSchema,
+    expenseSchema,
+    investmentSchema,
+    savingSchema,
+  ]),
+  defaultSchema,
+);
+
+watch(model, () => {
+  if (model.value === false) {
+    resetForm();
+  }
 });
 </script>
