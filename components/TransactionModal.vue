@@ -7,8 +7,7 @@
         :state="state"
         :schema="schema"
         class="flex flex-col gap-y-4"
-        :ref="form"
-        @submit.prevent="onSubmit"
+        @submit="onSubmit"
       >
         <UFormGroup label="Transaction type" :required="true" name="type">
           <USelect
@@ -62,15 +61,6 @@
 import { categories, types } from "~/constants";
 import { z } from "zod";
 
-const model = defineModel();
-
-const form = ref();
-
-const onSubmit = async (event) => {
-  console.log("salut");
-  console.log(event);
-};
-
 const initialState = {
   type: undefined,
   amount: 0,
@@ -81,9 +71,7 @@ const initialState = {
 
 const state = ref({ ...initialState });
 
-const resetForm = () => {
-  Object.assign(state.value, initialState);
-};
+const model = defineModel();
 
 const defaultSchema = z.object({
   created_at: z.string(),
@@ -114,6 +102,14 @@ const schema = z.intersection(
   ]),
   defaultSchema,
 );
+
+const onSubmit = async (event) => {
+  console.log(event);
+};
+
+const resetForm = () => {
+  Object.assign(state.value, initialState);
+};
 
 watch(model, () => {
   if (model.value === false) {
