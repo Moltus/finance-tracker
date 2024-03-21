@@ -1,5 +1,5 @@
 <template>
-  <UModal v-model="model">
+  <UModal v-model="isOpen">
     <UCard>
       <template #header> Add transaction </template>
 
@@ -51,7 +51,15 @@
             v-model="state.category"
           />
         </UFormGroup>
-        <UButton type="submit" color="blue" variant="solid">Save</UButton>
+        <div>
+          <UButton
+            type="submit"
+            color="blue"
+            variant="solid"
+            :loading="isLoading"
+            >Save</UButton
+          >
+        </div>
       </UForm>
     </UCard>
   </UModal>
@@ -70,8 +78,14 @@ const initialState = {
 };
 
 const state = ref({ ...initialState });
+const isLoading = ref(false);
 
-const model = defineModel();
+const isOpen = defineModel();
+
+const supabase = useSupabaseClient();
+const toast = useToast();
+
+const emit = defineEmits(["saved"]);
 
 const defaultSchema = z.object({
   created_at: z.string(),
@@ -104,15 +118,39 @@ const schema = z.intersection(
 );
 
 const onSubmit = async (event) => {
-  console.log(event);
+  isLoading.value = true;
+  try {
+    const { error } = await supabase
+      .from("transaction")
+      .upsert({ ...state.value });
+    if (!error) {
+      toast.add({
+        title: "Transaction saved",
+        icon: "i-heroicons-check-circle",
+      });
+      isOpen.value = false;
+      emit("saved");
+      return;
+    }
+    throw error;
+  } catch (e) {
+    toast.add({
+      title: "Transaction not saved",
+      description: e.message,
+      icon: "i-heroicons-exclamation-circle",
+      color: "red",
+    });
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const resetForm = () => {
   Object.assign(state.value, initialState);
 };
 
-watch(model, () => {
-  if (model.value === false) {
+watch(isOpen, () => {
+  if (isOpen.value === false) {
     resetForm();
   }
 });
