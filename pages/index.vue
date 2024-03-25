@@ -87,6 +87,8 @@ const selectedView = ref(transactionViewOptions[1]);
 // Modal
 const isOpen = ref(false);
 
+const dates = useSelectedTimePeriod(selectedView);
+
 const {
   transactions: {
     incomeCount,
