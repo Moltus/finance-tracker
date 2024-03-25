@@ -14,28 +14,28 @@
       title="Income"
       :amount="incomeTotal"
       :last-amount="4500"
-      :loading="isLoading"
+      :loading="isPending"
     />
     <Trend
       color="red"
       title="Expense"
       :amount="expenseTotal"
       :last-amount="3500"
-      :loading="isLoading"
+      :loading="isPending"
     />
     <Trend
       color="green"
       title="Investments"
       :amount="4000"
       :last-amount="5000"
-      :loading="isLoading"
+      :loading="isPending"
     />
     <Trend
       color="red"
       title="Saving"
       :amount="4000"
       :last-amount="3000"
-      :loading="isLoading"
+      :loading="isPending"
     />
   </section>
 
@@ -44,15 +44,15 @@
       <h2 class="text-2xl font-extrabold">Transactions</h2>
       <p class="text-gray-500 dark:text-gray-400">
         You have
-        {{ income.length }}
-        {{ income.length > 1 ? "incomes" : "income" }} and
-        {{ expense.length }}
-        {{ expense.length > 1 ? "expenses" : "expense" }}
+        {{ incomeCount }}
+        {{ incomeCount > 1 ? "incomes" : "income" }} and
+        {{ expenseCount }}
+        {{ expenseCount > 1 ? "expenses" : "expense" }}
         this period
       </p>
     </div>
     <div>
-      <TransactionModal v-model="isOpen" @saved="refreshTransactions" />
+      <TransactionModal v-model="isOpen" @saved="refresh" />
       <UButton
         icon="i-heroicons-plus-circle"
         color="white"
@@ -63,18 +63,14 @@
     </div>
   </section>
 
-  <section v-if="!isLoading">
-    <div
-      v-for="(dayTransactions, date) in transactionsGroupedByDate"
-      :key="date"
-      class="mb-10"
-    >
+  <section v-if="!isPending">
+    <div v-for="(dayTransactions, date) in byDate" :key="date" class="mb-10">
       <DailyTransactionSummary :date="date" :transactions="dayTransactions" />
       <Transaction
         v-for="transaction in dayTransactions"
         :key="transaction.id"
         :transaction="transaction"
-        @deleted="refreshTransactions"
+        @deleted="refresh"
       />
     </div>
   </section>
@@ -87,63 +83,21 @@
 import { transactionViewOptions } from "~/constants";
 
 const selectedView = ref(transactionViewOptions[1]);
-const isLoading = ref(false);
-const transactions = ref([]);
-
-const income = computed(() =>
-  transactions.value.filter((t) => t.type === "Income"),
-);
-
-const expense = computed(() =>
-  transactions.value.filter((t) => t.type === "Expense"),
-);
-
-const incomeTotal = computed(() =>
-  income.value.reduce((acc, curr) => acc + curr.amount, 0),
-);
-
-const expenseTotal = computed(() =>
-  expense.value.reduce((acc, curr) => acc + curr.amount, 0),
-);
-
-// backend querying
-const supabase = useSupabaseClient();
-
-const fetchTransactions = async () => {
-  isLoading.value = true;
-  try {
-    const { data } = await useAsyncData("transactions", async () => {
-      const { data, error } = await supabase
-        .from("transaction")
-        .select()
-        .order("created_at", { ascending: false });
-
-      if (error) return [];
-      return data;
-    });
-    return data.value;
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const refreshTransactions = async () =>
-  (transactions.value = await fetchTransactions());
-
-await refreshTransactions();
-
-const transactionsGroupedByDate = computed(() => {
-  let grouped = {};
-
-  for (const transaction of transactions.value) {
-    const date = new Date(transaction.created_at).toISOString().split("T")[0];
-
-    grouped[date] ??= [];
-    grouped[date].push(transaction);
-  }
-  return grouped;
-});
 
 // Modal
 const isOpen = ref(false);
+
+const {
+  transactions: {
+    incomeCount,
+    expenseCount,
+    incomeTotal,
+    expenseTotal,
+    grouped: { byDate },
+  },
+  isPending,
+  refresh,
+} = useFetchTransactions();
+
+await refresh();
 </script>
