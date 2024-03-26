@@ -90,6 +90,8 @@ const isOpen = ref(false);
 const { current, previous } = useSelectedTimePeriod(selectedView);
 
 const {
+  isPending,
+  refresh,
   transactions: {
     incomeCount,
     expenseCount,
@@ -97,14 +99,15 @@ const {
     expenseTotal,
     grouped: { byDate },
   },
-  isPending,
-  refresh,
 } = useFetchTransactions(current);
+await refresh();
 
 const {
+  refresh: refreshPrevious,
   transactions: {
     incomeTotal: prevIncomeTotal,
     expenseTotal: prevExpenseTotal,
   },
 } = useFetchTransactions(previous);
+await refreshPrevious();
 </script>
