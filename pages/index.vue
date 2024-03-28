@@ -100,7 +100,7 @@ const {
     grouped: { byDate },
   },
 } = useFetchTransactions(current);
-await refresh();
+refresh();
 
 const {
   refresh: refreshPrevious,
@@ -109,5 +109,5 @@ const {
     expenseTotal: prevExpenseTotal,
   },
 } = useFetchTransactions(previous);
-await refreshPrevious();
+refreshPrevious();
 </script>
