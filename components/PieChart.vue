@@ -1,4 +1,10 @@
 <script setup>
+const colorMode = useColorMode();
+const isDarkMode = ref(true);
+
+watch(colorMode, (color) => {
+  isDarkMode.value = color.value == "dark";
+});
 const options = computed(() => ({
   chart: {
     type: "pie",
@@ -74,7 +80,10 @@ const options = computed(() => ({
 
 <template>
   <div>
-    <highchart :options="options" />
+    <highchart
+      :options="options"
+      :class="[isDarkMode ? 'highcharts-dark' : 'highcharts-light']"
+    />
   </div>
 </template>
 
