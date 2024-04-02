@@ -54,7 +54,7 @@
         <div>
           <UButton
             type="submit"
-            color="blue"
+            color="green"
             variant="solid"
             :loading="isLoading"
             >Save</UButton
