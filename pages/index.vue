@@ -1,3 +1,36 @@
+<script setup>
+import { transactionViewOptions } from "~/constants";
+
+const selectedView = ref(transactionViewOptions[1]);
+
+// Modal
+const isOpen = ref(false);
+
+const { current, previous } = useSelectedTimePeriod(selectedView);
+
+const {
+  isPending,
+  refresh,
+  transactions: {
+    incomeCount,
+    expenseCount,
+    incomeTotal,
+    expenseTotal,
+    grouped: { byDate },
+  },
+} = useFetchTransactions(current);
+refresh();
+
+const {
+  refresh: refreshPrevious,
+  transactions: {
+    incomeTotal: prevIncomeTotal,
+    expenseTotal: prevExpenseTotal,
+  },
+} = useFetchTransactions(previous);
+refreshPrevious();
+</script>
+
 <template>
   <section class="flex items-center justify-between mb-10">
     <h1 class="text-4xl font-extrabold">Summary</h1>
@@ -38,7 +71,14 @@
       />
     </section>
 
-    <section class="flex justify-between">
+    <section class="space-y-10 col-start-1 2xl-col-start-2">
+      <LineChart />
+      <PieChart />
+    </section>
+
+    <section
+      class="flex justify-between row-start-1 col-start-1 2xl:col-start-2"
+    >
       <div>
         <h2 class="text-2xl font-extrabold">Transactions</h2>
         <p class="text-gray-500 dark:text-gray-400">
@@ -73,43 +113,8 @@
         />
       </div>
     </section>
-    <section v-else>
+    <section v-else class="col-start-1 2xl:col-start-2">
       <USkeleton class="h-8 w-full mb-2" v-for="i in 4" :key="i" />
     </section>
   </div>
 </template>
-
-<script setup>
-import { transactionViewOptions } from "~/constants";
-
-const selectedView = ref(transactionViewOptions[1]);
-
-// Modal
-const isOpen = ref(false);
-
-const { current, previous } = useSelectedTimePeriod(selectedView);
-console.log(current.value);
-console.log(previous.value);
-
-const {
-  isPending,
-  refresh,
-  transactions: {
-    incomeCount,
-    expenseCount,
-    incomeTotal,
-    expenseTotal,
-    grouped: { byDate },
-  },
-} = useFetchTransactions(current);
-refresh();
-
-const {
-  refresh: refreshPrevious,
-  transactions: {
-    incomeTotal: prevIncomeTotal,
-    expenseTotal: prevExpenseTotal,
-  },
-} = useFetchTransactions(previous);
-refreshPrevious();
-</script>

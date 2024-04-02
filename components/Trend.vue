@@ -4,7 +4,7 @@
 
     <div class="text-2xl font-extrabold text-black dark:text-white mb-2">
       <USkeleton class="h-8 w-full" v-if="loading" />
-      <div v-else>{{ currency }}</div>
+      <div v-else class="text-gray-600 dark:text-gray-300">{{ currency }}</div>
     </div>
 
     <div>
