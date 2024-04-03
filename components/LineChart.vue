@@ -36,10 +36,13 @@ const options = computed(() => ({
   },
   plotOptions: {
     line: {
+      marker: {
+        enabled: false,
+      },
       dataLabels: {
         enabled: true,
       },
-      enableMouseTracking: false,
+      enableMouseTracking: true,
     },
   },
   series: [
