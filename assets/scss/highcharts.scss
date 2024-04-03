@@ -1,3 +1,10 @@
+text {
+  color: #333 !important;
+  fill: #333 !important;
+  tspan {
+    stroke-width: 0;
+  }
+}
 .highcharts-dark {
   text {
     color: #fff !important;
@@ -6,5 +13,9 @@
     tspan {
       stroke-width: 0;
     }
+  }
+
+  .highcharts-background {
+    fill: #262626 !important;
   }
 }

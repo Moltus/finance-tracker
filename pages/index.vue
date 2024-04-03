@@ -71,7 +71,7 @@ refreshPrevious();
       />
     </section>
 
-    <section class="space-y-10 col-start-1 2xl-col-start-2">
+    <section class="space-y-16 pt-5 col-start-1 2xl-col-start-2">
       <LineChart />
       <PieChart />
     </section>
