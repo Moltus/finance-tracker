@@ -5,4 +5,9 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false,
   },
+  highcharts: {
+    setOptions: {
+      credits: false,
+    },
+  },
 });
