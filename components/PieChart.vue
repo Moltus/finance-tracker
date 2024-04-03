@@ -15,9 +15,6 @@ const options = computed(() => ({
   tooltip: {
     valueSuffix: "%",
   },
-  subtitle: {
-    text: 'Source:<a href="https://www.mdpi.com/2072-6643/11/3/684/htm" target="_default">MDPI</a>',
-  },
   plotOptions: {
     series: {
       allowPointSelect: true,
@@ -86,17 +83,3 @@ const options = computed(() => ({
     />
   </div>
 </template>
-
-<style scoped>
-@import url("https://code.highcharts.com/dashboards/css/dashboards.css");
-@import url("https://code.highcharts.com/css/highcharts.css");
-@import url("https://code.highcharts.com/dashboards/css/datagrid.css");
-.highcharts-axis-labels {
-  color: #ddd;
-  fill: #ddd !important;
-}
-.highcharts-axis-labels text {
-  color: #ddd;
-  fill: #ddd !important;
-}
-</style>
