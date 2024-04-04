@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="grid grid-cols-3 py-2 border-b border-gray-200 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100"
-  >
+  <div class="transaction-container">
     <div class="flex items-center justify-between gap-x-4 col-span-2">
       <div class="flex items-center gap-x-1">
         <UIcon :name="icon" :class="[iconColor]" />
@@ -90,3 +88,15 @@ const items = [
   ],
 ];
 </script>
+
+<style scoped lang="scss">
+.transaction-container {
+  @apply grid grid-cols-3 py-2 px-2 border-b border-gray-200 dark:border-neutral-700
+  text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100
+  dark:hover:bg-neutral-700;
+
+  &:hover button {
+    @apply bg-white dark:bg-black;
+  }
+}
+</style>

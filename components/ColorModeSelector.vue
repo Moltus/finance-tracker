@@ -19,13 +19,13 @@ const showNextModelLabel = ref(false);
 const colorMode = useColorMode();
 
 const modes = [
-  "system", // 0
+  // "system", // 0
   "light", // 1
   "dark", // 2
 ]; // .length = 3
 
 const nextModeIcons = {
-  system: "🌓",
+  // system: "🌓",
   light: "🌕",
   dark: "🌑",
 };

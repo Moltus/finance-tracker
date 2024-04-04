@@ -10,7 +10,7 @@ const options = computed(() => ({
     type: "pie",
   },
   title: {
-    text: "Egg Yolk Composition",
+    text: "Repartition",
   },
   tooltip: {
     valueSuffix: "%",
@@ -48,26 +48,22 @@ const options = computed(() => ({
       colorByPoint: true,
       data: [
         {
-          name: "Water",
+          name: "Income",
           y: 55.02,
         },
         {
-          name: "Fat",
+          name: "Expense",
           sliced: true,
           selected: true,
           y: 26.71,
         },
         {
-          name: "Carbohydrates",
+          name: "Investments",
           y: 1.09,
         },
         {
-          name: "Protein",
+          name: "Saving",
           y: 15.5,
-        },
-        {
-          name: "Ash",
-          y: 1.68,
         },
       ],
     },
