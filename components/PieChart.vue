@@ -5,6 +5,13 @@ const isDarkMode = ref(true);
 watch(colorMode, (color) => {
   isDarkMode.value = color.value == "dark";
 });
+
+const props = defineProps({
+  values: Array,
+});
+
+console.log(props.values);
+
 const options = computed(() => ({
   chart: {
     type: "pie",
@@ -46,26 +53,26 @@ const options = computed(() => ({
     {
       name: "Percentage",
       colorByPoint: true,
-      data: [
-        {
-          name: "Income",
-          y: 55.02,
-        },
-        {
-          name: "Expense",
-          sliced: true,
-          selected: true,
-          y: 26.71,
-        },
-        {
-          name: "Investments",
-          y: 1.09,
-        },
-        {
-          name: "Saving",
-          y: 15.5,
-        },
-      ],
+      // data: [
+      //   {
+      //     name: "Income",
+      //     selected: true,
+      //     y: 8207.0,
+      //   },
+      //   {
+      //     name: "Expense",
+      //     y: 4804.0,
+      //   },
+      //   {
+      //     name: "Saving",
+      //     y: 9999.0,
+      //   },
+      //   {
+      //     name: "investment",
+      //     y: 0.0,
+      //   },
+      // ],
+      data: props.values,
     },
   ],
 }));
