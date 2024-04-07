@@ -7,6 +7,8 @@ const selectedView = ref(transactionViewOptions[1]);
 const isOpen = ref(false);
 
 const { current, previous } = useSelectedTimePeriod(selectedView);
+console.log(selectedView);
+console.log(current.value, previous.value);
 
 const {
   isPending,
@@ -14,8 +16,12 @@ const {
   transactions: {
     incomeCount,
     expenseCount,
+    savingCount,
+    investmentCount,
     incomeTotal,
     expenseTotal,
+    savingTotal,
+    investmentTotal,
     grouped: { byDate },
   },
 } = useFetchTransactions(current);
@@ -26,9 +32,18 @@ const {
   transactions: {
     incomeTotal: prevIncomeTotal,
     expenseTotal: prevExpenseTotal,
+    savingTotal: prevSavingTotal,
+    investmentTotal: prevInvestmentTotal,
   },
 } = useFetchTransactions(previous);
 refreshPrevious();
+
+const pieChartValues = computed(() => [
+  { name: "Income", y: incomeTotal.value },
+  { name: "Expense", y: expenseTotal.value },
+  { name: "Saving", y: savingTotal.value },
+  { name: "Investment", y: investmentTotal.value },
+]);
 </script>
 
 <template>
@@ -57,23 +72,23 @@ refreshPrevious();
       />
       <Trend
         color="green"
-        title="Investments"
-        :amount="4000"
-        :last-amount="5000"
+        title="Saving"
+        :amount="savingTotal"
+        :last-amount="prevSavingTotal"
         :loading="isPending"
       />
       <Trend
         color="red"
-        title="Saving"
-        :amount="4000"
-        :last-amount="3000"
+        title="Investment"
+        :amount="investmentTotal"
+        :last-amount="prevInvestmentTotal"
         :loading="isPending"
       />
     </section>
 
     <section class="space-y-16 pt-5 col-start-1 2xl-col-start-2">
       <LineChart />
-      <PieChart />
+      <PieChart :values="pieChartValues" />
     </section>
 
     <section
@@ -87,6 +102,10 @@ refreshPrevious();
           {{ incomeCount > 1 ? "incomes" : "income" }} and
           {{ expenseCount }}
           {{ expenseCount > 1 ? "expenses" : "expense" }}
+          {{ savingCount }}
+          {{ savingCount > 1 ? "savings" : "saving" }} and
+          {{ investmentCount }}
+          {{ investmentCount > 1 ? "investments" : "investment" }}
           this period
         </p>
       </div>
