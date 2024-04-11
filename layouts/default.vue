@@ -1,7 +1,7 @@
 <template>
   <div class="mx-5 sm:mx-16">
     <AppHeader />
-    <main class="my-10">
+    <main class="my-5">
       <slot />
     </main>
   </div>

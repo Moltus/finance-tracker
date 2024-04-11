@@ -108,7 +108,7 @@ const pieChartValues = computed(() => [
 </script>
 
 <template>
-  <section class="flex items-center justify-between mb-10">
+  <section class="flex items-center justify-between mb-5">
     <h1 class="text-4xl font-extrabold">Summary</h1>
     <div>
       <USelectMenu :options="transactionViewOptions" v-model="selectedView" />
@@ -147,7 +147,7 @@ const pieChartValues = computed(() => [
       />
     </section>
 
-    <section class="space-y-16 pt-5 col-start-1 2xl-col-start-2">
+    <section class="space-y-10 col-start-1 2xl-col-start-2">
       <!-- <CategoryPeriodChart :selectedView :values="periodHistoryTotals" /> -->
       <LineChart :selected-view />
       <PieChart :values="pieChartValues" />
@@ -183,7 +183,10 @@ const pieChartValues = computed(() => [
       </div>
     </section>
 
-    <section v-if="!isPending" class="col-start-1 2xl:col-start-2">
+    <section
+      v-if="!isPending"
+      class="transaction-list col-start-1 2xl:col-start-2"
+    >
       <div v-for="(dayTransactions, date) in byDate" :key="date" class="mb-10">
         <DailyTransactionSummary :date="date" :transactions="dayTransactions" />
         <Transaction
@@ -199,3 +202,13 @@ const pieChartValues = computed(() => [
     </section>
   </div>
 </template>
+
+<style scoped>
+@media (min-width: 1536px) and (min-height: 1180px) {
+  .transaction-list {
+    min-height: 860px;
+    max-height: calc(100vh - 340px);
+    overflow-y: scroll;
+  }
+}
+</style>

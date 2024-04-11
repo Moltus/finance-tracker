@@ -1,7 +1,7 @@
 <template>
-  <header class="flex justify-between items-center mt-10">
+  <header class="flex justify-between items-center mt-5">
     <NuxtLink to="/" class="text-xl font-bold"> Finance Tracker </NuxtLink>
-    <div class="flex gap-2">
+    <div class="flex gap-2 items-center">
       <ClientOnly>
         <ColorModeSelector />
       </ClientOnly>
