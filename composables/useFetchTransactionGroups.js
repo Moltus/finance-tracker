@@ -91,7 +91,6 @@ export const useFetchTransactionGroups = (periodHistory) => {
     try {
       const dataGroup = {};
       for (let period of periodHistory.value) {
-        console.log(period);
         const { data } = await useAsyncData(
           `transactions-${period.from.toDateString()}-${period.to.toDateString()}`,
           async () => {
@@ -141,7 +140,6 @@ export const useFetchTransactionGroups = (periodHistory) => {
       //     0,
       //   );
       // }
-      console.log(dataGroup);
       return dataGroup;
     } finally {
       isPending.value = false;
@@ -154,7 +152,6 @@ export const useFetchTransactionGroups = (periodHistory) => {
   watch(periodHistory, async () => {
     // console.log(periodHistory);
     await refresh();
-    console.log(transactionGroups.value);
   });
 
   // const transactionsGroupedByDate = computed(() => {

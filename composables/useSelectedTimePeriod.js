@@ -92,35 +92,104 @@ import {
 //   return values;
 // };
 
+// export const useSelectedTimePeriod = (period) => {
+//   const periodValues = computed(() => {
+//     const values = [];
+//     if (period.value == "Yearly") {
+//       for (let i = 4; i >= 0; i--) {
+//         values.push({
+//           name: format(subYears(new Date(), i), "yyyy"),
+//           from: startOfYear(subYears(new Date(), i)),
+//           to: endOfYear(subYears(new Date(), i)),
+//         });
+//       }
+//     } else if (period.value == "Monthly") {
+//       for (let i = 11; i >= 0; i--) {
+//         values.push({
+//           name: format(subMonths(new Date(), i), "LLL"),
+//           from: startOfMonth(subMonths(new Date(), i)),
+//           to: endOfMonth(subMonths(new Date(), i)),
+//         });
+//       }
+//     } else if (period.value == "Daily") {
+//       for (let i = 6; i >= 0; i--) {
+//         values.push({
+//           name: format(subDays(new Date(), i), "EEE"),
+//           from: startOfDay(subDays(new Date(), i)),
+//           to: endOfDay(subDays(new Date(), i)),
+//         });
+//       }
+//     }
+//     return values;
+//   });
+//   return periodValues;
+// };
+
 export const useSelectedTimePeriod = (period) => {
-  const periodValues = computed(() => {
-    const values = [];
+  const current = computed(() => {
     if (period.value == "Yearly") {
-      for (let i = 4; i >= 0; i--) {
-        values.push({
-          name: format(subYears(new Date(), i), "yyyy"),
-          from: startOfYear(subYears(new Date(), i)),
-          to: endOfYear(subYears(new Date(), i)),
-        });
-      }
+      return {
+        name: format(new Date(), "yyyy"),
+        from: startOfYear(new Date()),
+        to: endOfYear(new Date()),
+      };
     } else if (period.value == "Monthly") {
-      for (let i = 11; i >= 0; i--) {
-        values.push({
-          name: format(subMonths(new Date(), i), "LLL"),
-          from: startOfMonth(subMonths(new Date(), i)),
-          to: endOfMonth(subMonths(new Date(), i)),
-        });
-      }
+      return {
+        name: format(new Date(), "LLL"),
+        from: startOfMonth(new Date()),
+        to: endOfMonth(new Date()),
+      };
     } else if (period.value == "Daily") {
-      for (let i = 6; i >= 0; i--) {
-        values.push({
-          name: format(subDays(new Date(), i), "EEE"),
-          from: startOfDay(subDays(new Date(), i)),
-          to: endOfDay(subDays(new Date(), i)),
-        });
-      }
+      return {
+        name: format(new Date(), "EEE"),
+        from: startOfDay(new Date()),
+        to: endOfDay(new Date()),
+      };
     }
-    return values;
   });
-  return periodValues;
+
+  const previous = computed(() => {
+    if (period.value == "Yearly") {
+      return {
+        name: format(subYears(new Date(), 1), "yyyy"),
+        from: startOfYear(subYears(new Date(), 1)),
+        to: endOfYear(subYears(new Date(), 1)),
+      };
+    } else if (period.value == "Monthly") {
+      return {
+        name: format(subMonths(new Date(), 1), "LLL"),
+        from: startOfMonth(subMonths(new Date(), 1)),
+        to: endOfMonth(subMonths(new Date(), 1)),
+      };
+    } else if (period.value == "Daily") {
+      return {
+        name: format(subDays(new Date(), 1), "EEE"),
+        from: startOfMonth(subDays(new Date(), 1)),
+        to: endOfMonth(subDays(new Date(), 1)),
+      };
+    }
+  });
+
+  const history = computed(() => {
+    if (period.value == "Yearly") {
+      return {
+        name: format(subYears(new Date(), 5), "yyyy"),
+        from: startOfYear(subYears(new Date(), 5)),
+        to: new Date(),
+      };
+    } else if (period.value == "Monthly") {
+      return {
+        name: format(subMonths(new Date(), 12), "LLL"),
+        from: startOfMonth(subMonths(new Date(), 12)),
+        to: new Date(),
+      };
+    } else if (period.value == "Daily") {
+      return {
+        name: format(subDays(new Date(), 7), "EEE"),
+        from: startOfMonth(subDays(new Date(), 7)),
+        to: new Date(),
+      };
+    }
+  });
+  return { current, previous, history };
 };

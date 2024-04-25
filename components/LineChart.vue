@@ -11,8 +11,6 @@ const props = defineProps({
   values: Array,
 });
 
-console.log(props.values);
-
 const options = computed(() => {
   const optionValues = {
     chart: {

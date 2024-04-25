@@ -1,3 +1,5 @@
+import { getMonth, getYear, format } from "date-fns";
+
 export const useFetchTransactions = (period) => {
   const transactions = ref([]);
   const isPending = ref(false);
@@ -46,7 +48,7 @@ export const useFetchTransactions = (period) => {
     isPending.value = true;
     try {
       const { data } = await useAsyncData(
-        `transactions-${period.value.from.toDateString()}-${period.value.from.toDateString()}`,
+        `transactions-${period.value.from.toDateString()}-${period.value.to.toDateString()}`,
         async () => {
           const { data, error } = await supabase
             .from("transaction")
@@ -69,10 +71,45 @@ export const useFetchTransactions = (period) => {
 
   watch(period, async () => await refresh());
 
+  const transactionsTotalsByYear = computed(() => {
+    let totals = {};
+
+    for (const transaction of transactions.value) {
+      const year = getYear(new Date(transaction.created_at));
+
+      totals[year] ??= 0;
+      totals[year] += transaction.amount;
+    }
+
+    return totals;
+  });
+
+  const transactionsTotalsByMonth = computed(() => {
+    let totals = {
+      Income: {},
+      Expense: {},
+      Saving: {},
+      Investment: {},
+    };
+
+    for (const transaction of transactions.value) {
+      // const month = getMonth(new Date(transaction.created_at));
+      // const month = format(getMonth(new Date(transaction.created_at)), "LLL");
+      const month = format(new Date(transaction.created_at), "LLL");
+
+      totals[transaction.type][month] ??= 0;
+      totals[transaction.type][month] += transaction.amount;
+    }
+
+    return totals;
+  });
+
   const transactionsGroupedByDate = computed(() => {
     let grouped = {};
 
+    // console.log(transactions.value);
     for (const transaction of transactions.value) {
+      // console.log(transaction);
       const date = new Date(transaction.created_at).toISOString().split("T")[0];
 
       grouped[date] ??= [];
@@ -85,6 +122,8 @@ export const useFetchTransactions = (period) => {
     transactions: {
       all: transactions,
       grouped: {
+        totalsByYear: transactionsTotalsByYear,
+        totalsByMonth: transactionsTotalsByMonth,
         byDate: transactionsGroupedByDate,
       },
       income,
