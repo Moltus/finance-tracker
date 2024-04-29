@@ -85,14 +85,14 @@ const refreshTransactions = () => {
   <div class="grid grid-cols-1 2xl:grid-cols-2 gap-y-10 2xl:gap-x-16">
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-16">
       <Trend
-        color="green"
+        color="sky"
         title="Income"
         :amount="currIncomeTotal"
         :last-amount="prevIncomeTotal"
         :loading="isPending"
       />
       <Trend
-        color="red"
+        color="indigo"
         title="Expense"
         :amount="currExpenseTotal"
         :last-amount="prevExpenseTotal"
@@ -106,7 +106,7 @@ const refreshTransactions = () => {
         :loading="isPending"
       />
       <Trend
-        color="red"
+        color="orange"
         title="Investment"
         :amount="currInvestmentTotal"
         :last-amount="prevInvestmentTotal"

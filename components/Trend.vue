@@ -55,29 +55,48 @@ const hoverClass = computed(
 </script>
 
 <style scoped>
+.sky {
+  @apply text-sky-600 dark:text-sky-400;
+}
 .green {
   @apply text-green-600 dark:text-green-400;
 }
-
 .red {
   @apply text-red-600 dark:text-red-400;
+}
+.indigo {
+  @apply text-indigo-600 dark:text-indigo-400;
+}
+.orange {
+  @apply text-orange-600 dark:text-orange-400;
 }
 
 .trend-container {
   @apply border-b-2 border-white dark:border-neutral-800 hover:cursor-pointer;
 
+  &.container-sky {
+    &:hover {
+      @apply border-b-2 border-sky-300;
+    }
+  }
   &.container-green {
     &:hover {
-      /* @apply border-b-4 border-green-400 bg-gradient-to-b from-green-100 dark:from-green-900 */
-      /* via-transparent dark:via-transparent; */
       @apply border-b-2 border-green-400;
     }
   }
   &.container-red {
     &:hover {
-      /* @apply border-b-4 border-red-400 bg-gradient-to-t from-red-100 dark:from-red-900 */
-      /* via-transparent dark:via-transparent; */
       @apply border-b-2 border-red-400;
+    }
+  }
+  &.container-indigo {
+    &:hover {
+      @apply border-b-2 border-indigo-400;
+    }
+  }
+  &.container-orange {
+    &:hover {
+      @apply border-b-2 border-orange-400;
     }
   }
 }
