@@ -1,4 +1,6 @@
 <script setup>
+import { categories } from "~/constants";
+
 const colorMode = useColorMode();
 const isDarkMode = ref(true);
 
@@ -8,7 +10,7 @@ watch(colorMode, (color) => {
 
 const props = defineProps({
   selectedView: String,
-  values: Array,
+  data: Object,
 });
 
 const options = computed(() => {
@@ -20,20 +22,7 @@ const options = computed(() => {
       text: `${props.selectedView} transaction totals`,
     },
     xAxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories: [],
     },
     yAxis: {
       title: {
@@ -51,21 +40,7 @@ const options = computed(() => {
         enableMouseTracking: true,
       },
     },
-    series: [
-      {
-        name: "Current period",
-        data: [
-          16.0, 18.2, 23.1, 27.9, 32.2, 36.4, 39.8, 38.4, 35.5, 29.2, 22.0,
-          17.8,
-        ],
-      },
-      {
-        name: "Last period",
-        data: [
-          -2.9, -3.6, -0.6, 4.8, 10.2, 14.5, 17.6, 16.5, 12.0, 6.5, 2.0, -0.9,
-        ],
-      },
-    ],
+    series: [],
     chart: {
       backgroundColor: {
         linearGradient: [0, 0, 500, 500],
@@ -76,6 +51,23 @@ const options = computed(() => {
       },
     },
   };
+  optionValues.xAxis.categories = Object.keys(props.data);
+
+  const series = {
+    Income: { name: "Income", data: [] },
+    Expense: { name: "Expense", data: [] },
+    Saving: { name: "Saving", data: [] },
+    Investment: { name: "Investment", data: [] },
+  };
+
+  for (const key in props.data) {
+    const { Income, Expense, Saving, Investment } = props.data[key];
+    series.Income.data.push(Income ?? 0);
+    series.Expense.data.push(Expense ?? 0);
+    series.Saving.data.push(Saving ?? 0);
+    series.Investment.data.push(Investment ?? 0);
+  }
+  optionValues.series = Object.values(series);
   return optionValues;
 });
 </script>

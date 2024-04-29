@@ -141,7 +141,7 @@ export const useSelectedTimePeriod = (period) => {
       };
     } else if (period.value == "Daily") {
       return {
-        name: format(new Date(), "EEE"),
+        name: format(new Date(), "dd"),
         from: startOfDay(new Date()),
         to: endOfDay(new Date()),
       };
@@ -163,7 +163,7 @@ export const useSelectedTimePeriod = (period) => {
       };
     } else if (period.value == "Daily") {
       return {
-        name: format(subDays(new Date(), 1), "EEE"),
+        name: format(subDays(new Date(), 1), "dd"),
         from: startOfMonth(subDays(new Date(), 1)),
         to: endOfMonth(subDays(new Date(), 1)),
       };
@@ -185,8 +185,8 @@ export const useSelectedTimePeriod = (period) => {
       };
     } else if (period.value == "Daily") {
       return {
-        name: format(subDays(new Date(), 7), "EEE"),
-        from: startOfMonth(subDays(new Date(), 7)),
+        name: format(subDays(new Date(), 30), "dd"),
+        from: startOfMonth(subDays(new Date(), 30)),
         to: new Date(),
       };
     }

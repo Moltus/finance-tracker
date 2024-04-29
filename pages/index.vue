@@ -5,23 +5,8 @@ const selectedView = ref(transactionViewOptions[1]);
 
 // Modal
 const isOpen = ref(false);
-// let period = ref([]);
 
 const { current, previous, history } = useSelectedTimePeriod(selectedView);
-// console.log(current.value);
-// console.log(history.value);
-// const period = useSelectedTimePeriod(selectedView);
-// const period = useSelectedTimePeriod(selectedView);
-// console.log(selectedView.value);
-// console.log(period.value);
-
-// const current = computed(() => period.value[period.value.length - 1]);
-// console.log(current.value);
-// const previous = computed(() => period.value[period.value.length - 2]);
-// const current = reactive(period.value[period.value.length - 1]);
-// const previous = reactive(period.value[period.value.length - 2]);
-// console.log(current.value);
-// console.log(previous.value);
 
 const {
   isPending,
@@ -40,8 +25,6 @@ const {
 } = useFetchTransactions(current);
 refreshCurrent();
 
-// console.log(currTransactions);
-
 const {
   refresh: refreshPrevious,
   transactions: {
@@ -49,69 +32,21 @@ const {
     expenseTotal: prevExpenseTotal,
     savingTotal: prevSavingTotal,
     investmentTotal: prevInvestmentTotal,
-    // grouped: { byDate: previousByDate },
   },
 } = useFetchTransactions(previous);
-// // } = useFetchTransactions(period.value[period.value.length - 2]);
 refreshPrevious();
-// console.log(previousByDate.value);
-
-// const period = computed(() => {
-//   const values = [];
-//   for (let period of period.value) {
-//     console.log(period);
-//     let {
-//       refresh,
-//       // transactions: { incomeTotal, expenseTotal, savingTotal, investmentTotal },
-//       transactions,
-//     } = useFetchTransactions(period);
-//     refresh();
-//     values.push({
-//       periodName: period.name,
-//       // totals: {
-//       //   incomeTotal: incomeTotal.value,
-//       //   expenseTotal: expenseTotal.value,
-//       //   savingTotal: savingTotal.value,
-//       //   investmentTotal: investmentTotal.value,
-//       // },
-//
-//       transactions,
-//
-//       // income: incomeTotal.value,
-//       // expense: expenseTotal.value,
-//       // saving: savingTotal.value,
-//       // investment: investmentTotal.value,
-//     });
-//   }
-//   return values;
-// });
-// console.log(period.value);
-
-// const {
-//   transactionGroups,
-//   refresh: refreshTotals,
-//   groupTotals,
-// } = useFetchTransactionGroups(period);
-// refreshTotals();
 
 const {
   refresh: refreshTotals,
   transactions: {
-    grouped: { totalsByYear, totalsByMonth, byDate },
+    grouped: { totalsByYear, totalsByMonth, totalsByDay, byDate },
   },
 } = useFetchTransactions(history);
 await refreshTotals();
 
-console.log(totalsByMonth.value);
-console.log(totalsByYear.value);
-// console.log(byDate.value);
-
-// computed(() => {
-//   for (let group in groupTotals.value) {
-//     console.log(group);
-//   }
-// });
-//
+// console.log(totalsByMonth.value);
+// console.log(totalsByYear.value);
+// console.log(totalsByDay.value);
 
 const pieChartValues = computed(() => [
   { name: "Income", y: currIncomeTotal.value },
@@ -120,12 +55,23 @@ const pieChartValues = computed(() => [
   { name: "Investment", y: currInvestmentTotal.value },
 ]);
 
-const lineChartValues = computed(() => [
-  { name: "Income", y: currIncomeTotal.value },
-  { name: "Expense", y: currExpenseTotal.value },
-  { name: "Saving", y: currSavingTotal.value },
-  { name: "Investment", y: currInvestmentTotal.value },
-]);
+console.log(selectedView);
+const lineChartValues = computed(() => {
+  switch (selectedView.value) {
+    case "Yearly":
+      return totalsByYear.value;
+    case "Daily":
+      return totalsByDay.value;
+    case "Monthly":
+    default:
+      return totalsByMonth.value;
+  }
+});
+
+const refreshTransactions = () => {
+  refreshCurrent();
+  refreshTotals();
+};
 </script>
 
 <template>
@@ -170,8 +116,8 @@ const lineChartValues = computed(() => [
 
     <section class="space-y-10 col-start-1 2xl-col-start-2">
       <!-- <CategoryPeriodChart :selectedView :values="periodHistoryTotals" /> -->
-      <LineChart :selected-view />
-      <PieChart :values="pieChartValues" />
+      <LineChart :selected-view :data="lineChartValues" />
+      <PieChart :data="pieChartValues" />
     </section>
 
     <section
@@ -193,7 +139,7 @@ const lineChartValues = computed(() => [
         </p>
       </div>
       <div>
-        <TransactionModal v-model="isOpen" @saved="refreshCurrent" />
+        <TransactionModal v-model="isOpen" @saved="refreshTransactions" />
         <UButton
           icon="i-heroicons-plus-circle"
           color="white"
@@ -218,7 +164,7 @@ const lineChartValues = computed(() => [
           v-for="transaction in dayTransactions"
           :key="transaction.id"
           :transaction="transaction"
-          @deleted="refreshCurrent"
+          @deleted="refreshTransactions"
         />
       </div>
     </section>

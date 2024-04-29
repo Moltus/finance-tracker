@@ -7,7 +7,7 @@ watch(colorMode, (color) => {
 });
 
 const props = defineProps({
-  values: Array,
+  data: Array,
 });
 
 const options = computed(() => ({
@@ -70,7 +70,7 @@ const options = computed(() => ({
       //     y: 0.0,
       //   },
       // ],
-      data: props.values,
+      data: props.data,
     },
   ],
 }));

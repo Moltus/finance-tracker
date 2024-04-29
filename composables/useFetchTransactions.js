@@ -4,6 +4,7 @@ export const useFetchTransactions = (period) => {
   const transactions = ref([]);
   const isPending = ref(false);
 
+  console.log(period.value);
   // backend querying
   const supabase = useSupabaseClient();
 
@@ -77,28 +78,37 @@ export const useFetchTransactions = (period) => {
     for (const transaction of transactions.value) {
       const year = getYear(new Date(transaction.created_at));
 
-      totals[year] ??= 0;
-      totals[year] += transaction.amount;
+      totals[year] ??= {};
+      totals[year][transaction.type] ??= 0;
+      totals[year][transaction.type] += transaction.amount;
     }
 
     return totals;
   });
 
   const transactionsTotalsByMonth = computed(() => {
-    let totals = {
-      Income: {},
-      Expense: {},
-      Saving: {},
-      Investment: {},
-    };
+    let totals = {};
 
     for (const transaction of transactions.value) {
-      // const month = getMonth(new Date(transaction.created_at));
-      // const month = format(getMonth(new Date(transaction.created_at)), "LLL");
       const month = format(new Date(transaction.created_at), "LLL");
 
-      totals[transaction.type][month] ??= 0;
-      totals[transaction.type][month] += transaction.amount;
+      totals[month] ??= {};
+      totals[month][transaction.type] ??= 0;
+      totals[month][transaction.type] += transaction.amount;
+    }
+
+    return totals;
+  });
+
+  const transactionsTotalsByDay = computed(() => {
+    let totals = {};
+
+    for (const transaction of transactions.value) {
+      const day = format(new Date(transaction.created_at), "dd");
+
+      totals[day] ??= {};
+      totals[day][transaction.type] ??= 0;
+      totals[day][transaction.type] += transaction.amount;
     }
 
     return totals;
@@ -107,9 +117,7 @@ export const useFetchTransactions = (period) => {
   const transactionsGroupedByDate = computed(() => {
     let grouped = {};
 
-    // console.log(transactions.value);
     for (const transaction of transactions.value) {
-      // console.log(transaction);
       const date = new Date(transaction.created_at).toISOString().split("T")[0];
 
       grouped[date] ??= [];
@@ -124,6 +132,7 @@ export const useFetchTransactions = (period) => {
       grouped: {
         totalsByYear: transactionsTotalsByYear,
         totalsByMonth: transactionsTotalsByMonth,
+        totalsByDay: transactionsTotalsByDay,
         byDate: transactionsGroupedByDate,
       },
       income,
