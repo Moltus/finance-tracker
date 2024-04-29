@@ -27,10 +27,10 @@ async function seedTransactions() {
 
   for (
     let year = new Date().getFullYear();
-    year > new Date().getFullYear() - 2;
+    year > new Date().getFullYear() - 5;
     year--
   ) {
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 100; i++) {
       const date = new Date(
         year,
         faker.number.int({ min: 0, max: 11 }),
