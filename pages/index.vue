@@ -44,10 +44,6 @@ const {
 } = useFetchTransactions(history);
 await refreshTotals();
 
-// console.log(totalsByMonth.value);
-// console.log(totalsByYear.value);
-// console.log(totalsByDay.value);
-
 const pieChartValues = computed(() => [
   { name: "Income", y: currIncomeTotal.value },
   { name: "Expense", y: currExpenseTotal.value },
@@ -55,7 +51,6 @@ const pieChartValues = computed(() => [
   { name: "Investment", y: currInvestmentTotal.value },
 ]);
 
-console.log(selectedView);
 const lineChartValues = computed(() => {
   switch (selectedView.value) {
     case "Yearly":

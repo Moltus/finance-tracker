@@ -1,5 +1,4 @@
 <script setup>
-import { categories } from "~/constants";
 
 const colorMode = useColorMode();
 const isDarkMode = ref(true);
