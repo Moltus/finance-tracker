@@ -1,10 +1,10 @@
-import { getMonth, getYear, format } from "date-fns";
+import { getMonth, getYear, format, eachDayOfInterval, eachMonthOfInterval, eachYearOfInterval } from "date-fns";
+import { types } from "~/constants";
 
 export const useFetchTransactions = (period) => {
   const transactions = ref([]);
   const isPending = ref(false);
 
-  console.log(period.value);
   // backend querying
   const supabase = useSupabaseClient();
 
@@ -73,13 +73,19 @@ export const useFetchTransactions = (period) => {
   watch(period, async () => await refresh());
 
   const transactionsTotalsByYear = computed(() => {
-    let totals = {};
+    const interval = { start: period.value.from, end: period.value.to };
+    const years = eachYearOfInterval(interval).map((date) => format(date, "yyyy"));
+
+    const totals = years.reduce((acc, key) => {
+      acc[key] = {};
+      for (const type of types) {
+        acc[key][type] = 0;
+      }
+      return acc;
+    }, {});
 
     for (const transaction of transactions.value) {
       const year = getYear(new Date(transaction.created_at));
-
-      totals[year] ??= {};
-      totals[year][transaction.type] ??= 0;
       totals[year][transaction.type] += transaction.amount;
     }
 
@@ -87,13 +93,19 @@ export const useFetchTransactions = (period) => {
   });
 
   const transactionsTotalsByMonth = computed(() => {
-    let totals = {};
+    const interval = { start: period.value.from, end: period.value.to };
+    const months = eachMonthOfInterval(interval).map((date) => format(date, "LLL"));
+
+    const totals = months.reduce((acc, key) => {
+      acc[key] = {};
+      for (const type of types) {
+        acc[key][type] = 0;
+      }
+      return acc;
+    }, {});
 
     for (const transaction of transactions.value) {
       const month = format(new Date(transaction.created_at), "LLL");
-
-      totals[month] ??= {};
-      totals[month][transaction.type] ??= 0;
       totals[month][transaction.type] += transaction.amount;
     }
 
@@ -101,10 +113,20 @@ export const useFetchTransactions = (period) => {
   });
 
   const transactionsTotalsByDay = computed(() => {
-    let totals = {};
+    // const interval = { start: period.value.from, end: period.value.to };
+    // const days = eachDayOfInterval(interval).map((date) => format(date, "MM/dd"));
+    //
+    // const totals = days.reduce((acc, key) => {
+    //   acc[key] = {};
+    //   for (const type of types) {
+    //     acc[key][type] = 0;
+    //   }
+    //   return acc;
+    // }, {});
 
+    const totals = {};
     for (const transaction of transactions.value) {
-      const day = format(new Date(transaction.created_at), "dd");
+      const day = format(new Date(transaction.created_at), "MM/dd");
 
       totals[day] ??= {};
       totals[day][transaction.type] ??= 0;
