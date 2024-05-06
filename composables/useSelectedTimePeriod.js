@@ -164,8 +164,8 @@ export const useSelectedTimePeriod = (period) => {
     } else if (period.value == "Daily") {
       return {
         name: format(subDays(new Date(), 1), "dd"),
-        from: startOfMonth(subDays(new Date(), 1)),
-        to: endOfMonth(subDays(new Date(), 1)),
+        from: startOfDay(subDays(new Date(), 1)),
+        to: endOfDay(subDays(new Date(), 1)),
       };
     }
   });
@@ -173,20 +173,20 @@ export const useSelectedTimePeriod = (period) => {
   const history = computed(() => {
     if (period.value == "Yearly") {
       return {
-        name: format(subYears(new Date(), 5), "yyyy"),
-        from: startOfYear(subYears(new Date(), 5)),
+        name: format(subYears(new Date(), 4), "yyyy"),
+        from: startOfYear(subYears(new Date(), 4)),
         to: new Date(),
       };
     } else if (period.value == "Monthly") {
       return {
-        name: format(subMonths(new Date(), 12), "LLL"),
-        from: startOfMonth(subMonths(new Date(), 12)),
+        name: format(subYears(new Date(), 1), "LLL"),
+        from: startOfMonth(subYears(new Date(), 1)),
         to: new Date(),
       };
     } else if (period.value == "Daily") {
       return {
-        name: format(subDays(new Date(), 30), "dd"),
-        from: startOfMonth(subDays(new Date(), 30)),
+        name: format(subMonths(new Date(), 1), "dd"),
+        from: startOfDay(subMonths(new Date(), 1)),
         to: new Date(),
       };
     }
