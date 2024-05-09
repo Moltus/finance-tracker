@@ -48,21 +48,29 @@ export const useFetchTransactions = (period) => {
   const fetchTransactions = async () => {
     isPending.value = true;
     try {
-      const { data } = await useAsyncData(
-        `transactions-${period.value.from.toDateString()}-${period.value.to.toDateString()}`,
-        async () => {
-          const { data, error } = await supabase
-            .from("transaction")
-            .select()
-            .gte("created_at", period.value.from.toISOString())
-            .lte("created_at", period.value.to.toISOString())
-            .order("created_at", { ascending: false });
+      // const { data } = await useAsyncData(
+      //   `transactions-${period.value.from.toDateString()}-${period.value.to.toDateString()}`,
+      //   async () => {
+      //     const { data, error } = await supabase
+      //       .from("transaction")
+      //       .select()
+      //       .gte("created_at", period.value.from.toISOString())
+      //       .lte("created_at", period.value.to.toISOString())
+      //       .order("created_at", { ascending: false });
+      //
+      //     if (error) return [];
+      //     return data;
+      //   },
+      // );
+      const { data, error } = await supabase
+        .from("transaction")
+        .select()
+        .gte("created_at", period.value.from.toISOString())
+        .lte("created_at", period.value.to.toISOString())
+        .order("created_at", { ascending: false });
 
-          if (error) return [];
-          return data;
-        },
-      );
-      return data.value;
+      if (error) return [];
+      return data;
     } finally {
       isPending.value = false;
     }
@@ -86,6 +94,9 @@ export const useFetchTransactions = (period) => {
 
     for (const transaction of transactions.value) {
       const segment = format(new Date(transaction.created_at), dateFormat);
+      if (!totals[segment]) {
+        continue;
+      }
       totals[segment][transaction.type] += transaction.amount;
     }
 
