@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   highcharts: {
     setOptions: {
       credits: false,
+      accessibility: { enabled: false },
     },
   },
 });
