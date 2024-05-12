@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/ui", "@nuxtjs/supabase", "nuxt-highcharts"],
   supabase: {
-    redirect: false,
+    redirect: true,
   },
   highcharts: {
     setOptions: {

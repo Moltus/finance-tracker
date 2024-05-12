@@ -26,3 +26,4 @@ logs
 # neovim cache files
 *.swp
 .swo
+seed.mjs
