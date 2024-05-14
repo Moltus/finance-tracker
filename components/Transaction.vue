@@ -8,19 +8,14 @@
       <div>
         <UBadge color="white" v-if="transaction.category">{{
           transaction.category
-        }}</UBadge>
+          }}</UBadge>
       </div>
     </div>
     <div class="flex items-center justify-end gap-x-2">
       <div>{{ currency }}</div>
       <div>
         <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
-          <UButton
-            color="white"
-            variant="ghost"
-            trailing-icon="i-heroicons-ellipsis-horizontal"
-            :loading="isLoading"
-          />
+          <UButton color="white" variant="ghost" trailing-icon="i-heroicons-ellipsis-horizontal" :loading="isLoading" />
         </UDropdown>
       </div>
     </div>
@@ -46,7 +41,7 @@ const iconColor = computed(() =>
 const { currency } = useCurrency(props.transaction.amount);
 
 const isLoading = ref(false);
-const toast = useToast();
+const { toastError, toastSuccess } = useAppToast();
 
 // backend querying
 const supabase = useSupabaseClient();
@@ -56,17 +51,13 @@ const deleteTransaction = async () => {
 
   try {
     await supabase.from("transaction").delete().eq("id", props.transaction.id);
-    toast.add({
+    toastSuccess({
       title: "Transaction deleted",
-      icon: "i-heroicons-check-circle",
-      color: "green",
     });
     emit("deleted", props.transaction.id);
   } catch (error) {
-    toast.add({
+    toastError({
       title: "Delete request rejected",
-      icon: "i-heroicons-exclamation-circle",
-      color: "red",
     });
   } finally {
     isLoading.value = false;
@@ -91,9 +82,7 @@ const items = [
 
 <style scoped lang="scss">
 .transaction-container {
-  @apply grid grid-cols-3 py-2 px-2 border-b border-gray-200 dark:border-neutral-700
-  text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100
-  dark:hover:bg-neutral-700;
+  @apply grid grid-cols-3 py-2 px-2 border-b border-gray-200 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-700;
 
   &:hover button {
     @apply bg-white dark:bg-black;

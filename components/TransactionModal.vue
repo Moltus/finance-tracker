@@ -3,62 +3,28 @@
     <UCard>
       <template #header> Add transaction </template>
 
-      <UForm
-        :state="state"
-        :schema="schema"
-        class="flex flex-col gap-y-4"
-        @submit="onSubmit"
-      >
+      <UForm :state="state" :schema="schema" class="flex flex-col gap-y-4" @submit="onSubmit">
         <UFormGroup label="Transaction type" :required="true" name="type">
-          <USelect
-            placeholder="Pick one..."
-            :options="types"
-            v-model="state.type"
-          />
+          <USelect placeholder="Pick one..." :options="types" v-model="state.type" />
         </UFormGroup>
 
         <UFormGroup label="Amount" :required="true" name="amount">
-          <UInput
-            type="number"
-            placeholder="Enter amount..."
-            v-model.number="state.amount"
-          />
+          <UInput type="number" placeholder="Enter amount..." v-model.number="state.amount" />
         </UFormGroup>
 
         <UFormGroup label="Transaction date" :required="true" name="created_at">
-          <UInput
-            type="date"
-            icon="i-heroicons-calendar-days-20-solid"
-            v-model="state.created_at"
-          />
+          <UInput type="date" icon="i-heroicons-calendar-days-20-solid" v-model="state.created_at" />
         </UFormGroup>
 
         <UFormGroup label="Description" hint="Optional" name="description">
-          <UInput
-            placeholder="Enter description..."
-            v-model="state.description"
-          />
+          <UInput placeholder="Enter description..." v-model="state.description" />
         </UFormGroup>
 
-        <UFormGroup
-          label="Category"
-          name="category"
-          v-if="state.type === 'Expense'"
-        >
-          <USelect
-            placeholder="Pick one..."
-            :options="categories"
-            v-model="state.category"
-          />
+        <UFormGroup label="Category" name="category" v-if="state.type === 'Expense'">
+          <USelect placeholder="Pick one..." :options="categories" v-model="state.category" />
         </UFormGroup>
         <div>
-          <UButton
-            type="submit"
-            color="green"
-            variant="solid"
-            :loading="isLoading"
-            >Save</UButton
-          >
+          <UButton type="submit" color="green" variant="solid" :loading="isLoading">Save</UButton>
         </div>
       </UForm>
     </UCard>
@@ -83,7 +49,7 @@ const isLoading = ref(false);
 const isOpen = defineModel();
 
 const supabase = useSupabaseClient();
-const toast = useToast();
+const { toastError, toastSuccess } = useAppToast();
 
 const emit = defineEmits(["saved"]);
 
@@ -124,9 +90,8 @@ const onSubmit = async (event) => {
       .from("transaction")
       .upsert({ ...state.value });
     if (!error) {
-      toast.add({
+      toastSuccess({
         title: "Transaction saved",
-        icon: "i-heroicons-check-circle",
       });
       isOpen.value = false;
       emit("saved");
@@ -134,11 +99,9 @@ const onSubmit = async (event) => {
     }
     throw error;
   } catch (e) {
-    toast.add({
+    toastError({
       title: "Transaction not saved",
       description: e.message,
-      icon: "i-heroicons-exclamation-circle",
-      color: "red",
     });
   } finally {
     isLoading.value = false;
