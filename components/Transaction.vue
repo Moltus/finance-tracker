@@ -1,33 +1,9 @@
-<template>
-  <div class="transaction-container">
-    <div class="flex items-center justify-between gap-x-4 col-span-2">
-      <div class="flex items-center gap-x-1">
-        <UIcon :name="icon" :class="[iconColor]" />
-        <div>{{ transaction.description }}</div>
-      </div>
-      <div>
-        <UBadge color="white" v-if="transaction.category">{{
-          transaction.category
-          }}</UBadge>
-      </div>
-    </div>
-    <div class="flex items-center justify-end gap-x-2">
-      <div>{{ currency }}</div>
-      <div>
-        <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
-          <UButton color="white" variant="ghost" trailing-icon="i-heroicons-ellipsis-horizontal" :loading="isLoading" />
-        </UDropdown>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 const props = defineProps({
   transaction: Object,
 });
 
-const emit = defineEmits(["deleted"]);
+const emit = defineEmits(["deleted", "edited"]);
 
 const isIncome = computed(() => props.transaction.type === "Income");
 const icon = computed(() =>
@@ -42,6 +18,8 @@ const { currency } = useCurrency(props.transaction.amount);
 
 const isLoading = ref(false);
 const { toastError, toastSuccess } = useAppToast();
+
+const isOpen = ref(false)
 
 // backend querying
 const supabase = useSupabaseClient();
@@ -69,7 +47,7 @@ const items = [
     {
       label: "Edit",
       icon: "i-heroicons-pencil-square-20-solid",
-      click: () => console.log("Edit"),
+      click: () => isOpen.value = true,
     },
     {
       label: "Delete",
@@ -79,6 +57,32 @@ const items = [
   ],
 ];
 </script>
+
+<template>
+  <div class="transaction-container">
+    <div class="flex items-center justify-between gap-x-4 col-span-2">
+      <div class="flex items-center gap-x-1">
+        <UIcon :name="icon" :class="[iconColor]" />
+        <div>{{ transaction.description }}</div>
+      </div>
+      <div>
+        <UBadge color="white" v-if="transaction.category">{{
+          transaction.category
+          }}</UBadge>
+      </div>
+    </div>
+    <div class="flex items-center justify-end gap-x-2">
+      <div>{{ currency }}</div>
+      <div>
+        <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+          <UButton color="white" variant="ghost" trailing-icon="i-heroicons-ellipsis-horizontal" :loading="isLoading" />
+          <TransactionModal v-model="isOpen" :transaction="transaction" @saved="emit('edited')" />
+        </UDropdown>
+      </div>
+    </div>
+  </div>
+</template>
+
 
 <style scoped lang="scss">
 .transaction-container {

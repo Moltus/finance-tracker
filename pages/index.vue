@@ -90,8 +90,8 @@ const refreshTransactions = () => {
 
     <section class="space-y-10 col-start-1 2xl-col-start-2">
       <!-- <CategoryPeriodChart :selectedView :values="periodHistoryTotals" /> -->
-      <LineChart :selected-view :data="lineChartValues" />
       <PieChart :data="pieChartValues" />
+      <LineChart :selected-view :data="lineChartValues" />
     </section>
 
     <section class="flex justify-between row-start-1 col-start-1 2xl:col-start-2">
@@ -120,7 +120,7 @@ const refreshTransactions = () => {
       <div v-for="(dayTransactions, date) in currTransactions" :key="date" class="mb-10">
         <DailyTransactionSummary :date="date" :transactions="dayTransactions" />
         <Transaction v-for="transaction in dayTransactions" :key="transaction.id" :transaction="transaction"
-          @deleted="refreshTransactions" />
+          @deleted="refreshTransactions" @edited="refreshTransactions" />
       </div>
     </section>
     <section v-else class="col-start-1 2xl:col-start-2">
